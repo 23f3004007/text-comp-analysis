@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text Compression Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .results-table th, .results-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        .results-table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .results-table tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+        .download-btn {
+            padding: 6px 12px;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 0 4px;
+        }
+        .preview-btn {
+            background-color: #28a745;
+        }
+        .preview-btn:hover {
+            background-color: #218838;
+        }
+        .download-compressed {
+            background-color: #008CBA;
+        }
+        .download-compressed:hover {
+            background-color: #007095;
+        }
+        .download-decompressed {
+            background-color: #6c757d;
+        }
+        .download-decompressed:hover {
+            background-color: #5a6268;
+        }
+        .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text Compression and Decompression Analysis</h1>
+        <form action="/" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".txt" required>
+            <button type="submit"><i class="fas fa-compress"></i> Compress</button>
+        </form>
+
+        {% if results %}
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Compression Ratio</th>
+                    <th>Compression Time (s)</th>
+                    <th>Decompression Time (s)</th>
+                    <th>Preview</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    <td>{{ result.method.upper() }}</td>
+                    <td>{{ result.ratio }}</td>
+                    <td>{{ result.comp_time }}</td>
+                    <td>{{ result.decomp_time }}</td>
+                    <td class="preview-text" title="{{ result.decompressed }}">
+                        {{ result.decompressed[:50] }}...
+                    </td>
+                    <!-- In the table body section -->
+                    <td class="btn-group">
+                        <a href="{{ url_for('preview_text', method=result.method) }}" 
+                           class="btn preview-btn" 
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
+                        <a href="{{ url_for('download', filename=result.file) }}" 
+                           class="btn download-compressed">
+                            <i class="fas fa-file-archive"></i> Compressed
+                        </a>
+                        <a href="{{ url_for('download_decompressed', method=result.method) }}" 
+                           class="btn download-decompressed">
+                            <i class="fas fa-file-alt"></i> Decompressed
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</body>
+</html>
