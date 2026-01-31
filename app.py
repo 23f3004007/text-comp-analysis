@@ -6,8 +6,8 @@ import struct
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key' 
-UPLOAD_FOLDER = 'uploads'
-COMPRESSED_FOLDER = 'compressed'
+UPLOAD_FOLDER = '/tmp/uploads'
+COMPRESSED_FOLDER = '/tmp/compressed'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(COMPRESSED_FOLDER, exist_ok=True)
 
